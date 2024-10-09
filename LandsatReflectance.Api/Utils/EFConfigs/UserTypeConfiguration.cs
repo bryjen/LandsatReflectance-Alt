@@ -18,10 +18,12 @@ public class UserTypeConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(user => user.Email)
             .HasColumnName("Email")
+            .HasMaxLength(100)
             .IsRequired();
 
         builder.Property(user => user.PasswordHash)
             .HasColumnName("PasswordHash")
+            .HasMaxLength(100)
             .IsRequired();
 
         builder.Property(user => user.IsEmailEnabled)
