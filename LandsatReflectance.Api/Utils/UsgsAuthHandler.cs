@@ -38,7 +38,7 @@ public class UsgsAuthHandler : DelegatingHandler
             m_usgsAuthTokenStore.Token = newAuthToken;
         }
         
-        request.Headers.Add("X-Auth-Token", m_usgsAuthTokenStore.Token);
+        // request.Headers.Add("X-Auth-Token", m_usgsAuthTokenStore.Token);
         
         return await base.SendAsync(request, cancellationToken);
     }

@@ -7,6 +7,7 @@ using LandsatReflectance.Backend.Models.UsgsApi.Types.Request;
 using LandsatReflectance.Backend.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using JsonException = Newtonsoft.Json.JsonException;
 
 namespace LandsatReflectance.Api.Controllers;
 
@@ -28,6 +29,7 @@ public class UsgsImageController : ControllerBase
 {
     [HttpGet("GetScenes", Name = "GetScenes")]
     public async Task<IActionResult> GetScenes(
+        [FromServices] ILogger<UsgsImageController> logger,
         [FromServices] IOptions<JsonOptions> jsonOptions,
         [FromServices] UsgsImageService usgsImageService,
         [FromQuery(Name = "path")] int path, 
@@ -38,23 +40,39 @@ public class UsgsImageController : ControllerBase
         [FromQuery(Name = "includeUnknownCloudCover")] bool includeUnknownCloudCover = true)
     {
         var sceneSearchRequest = CreatePathRowSceneSearchRequest(path, row, numResults, minCloudCover, maxCloudCover, includeUnknownCloudCover);
-        var sceneSearchResponse = await usgsImageService.QuerySceneSearch(sceneSearchRequest);
 
-        var sceneSearchData = sceneSearchResponse.Data;
-        var sceneDataArr = sceneSearchData?.ReturnedSceneData.ToArray() ?? [];
-
-        IEnumerable<ImageData> asImageData = sceneDataArr
-            .Select(ToImageData)
-            .Where(imageData => imageData is not null)
-            .OrderByDescending(imageData => imageData!.PublishDate)!;
-
-        var response = new ResponseBase<IEnumerable<ImageData>>
+        try
         {
-            ErrorMessage = null,
-            Data = asImageData
-        };
+            var sceneSearchResponse = await usgsImageService.QuerySceneSearch(sceneSearchRequest);
+            var sceneSearchData = sceneSearchResponse.Data;
+            var sceneDataArr = sceneSearchData?.ReturnedSceneData.ToArray() ?? [];
 
-        return Ok(JsonSerializer.Serialize(response, jsonOptions.Value.JsonSerializerOptions));
+            IEnumerable<ImageData> asImageData = sceneDataArr
+                .Select(ToImageData)
+                .Where(imageData => imageData is not null)
+                .OrderByDescending(imageData => imageData!.PublishDate)!;
+
+            var response = new ResponseBase<IEnumerable<ImageData>>
+            {
+                ErrorMessage = null,
+                Data = asImageData
+            };
+
+            return Ok(JsonSerializer.Serialize(response, jsonOptions.Value.JsonSerializerOptions));
+        }
+        catch (Exception exception) when (exception is HttpRequestException or JsonException or TaskCanceledException)
+        {
+            const string errorMsg = "There was a problem fetching image data with code.";
+            var response = new ResponseBase<object>
+            {
+                ErrorMessage = errorMsg,
+                Data = null 
+            };
+            
+            logger.LogError($"[{exception.GetHashCode()}] {errorMsg} The operation failed with error message: \"{exception.Message}\"");
+            logger.LogTrace($"[{exception.GetHashCode()}] Stack trace:\n{exception.StackTrace}");
+            return StatusCode(500, JsonSerializer.Serialize(response, jsonOptions.Value.JsonSerializerOptions));
+        }
     }
 
     

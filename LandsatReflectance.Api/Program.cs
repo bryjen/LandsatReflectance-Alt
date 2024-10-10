@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using LandsatReflectance.Api.Middleware;
 using LandsatReflectance.Api.Services;
 using LandsatReflectance.Api.Utils;
 using LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
@@ -13,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 EnvironmentVariablesService.Init();
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
 {
@@ -115,6 +117,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<BaseErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

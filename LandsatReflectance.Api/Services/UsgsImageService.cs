@@ -44,15 +44,17 @@ public class UsgsImageService
         var response = await httpClient.PostAsync(requestUri, contents);
 
         if (!response.IsSuccessStatusCode)
+        {
             throw new HttpRequestException($"Request failed with status code: {response.StatusCode}. Reason: {response.ReasonPhrase}");
+        }
 
         var responseContentsRaw = await response.Content.ReadAsStringAsync();
-        if (string.IsNullOrEmpty(responseContentsRaw))
-            throw new InvalidOperationException("The response content is empty or null, which is unexpected.");
-        
         var deserializedObject = JsonSerializer.Deserialize<UsgsApiResponse<TResponseType>>(responseContentsRaw, jsonSerializerOptions);
+        
         if (deserializedObject is null)
+        {
             throw new JsonException("Failed to deserialize the API response. The JSON format might be invalid or unexpected.");
+        }
         
         return deserializedObject;
     }
