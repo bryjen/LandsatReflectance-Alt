@@ -46,6 +46,7 @@ public sealed class TargetsService
         }
         catch (Exception exception)
         {
+            m_logger.LogError($"\"AddTargets\" caught an exception with message: \"{exception.Message}\"");
             try
             {
                 await transaction.RollbackAsync();
@@ -72,5 +73,91 @@ public sealed class TargetsService
             .FromSqlRaw(rawSqlTemplate)
             .AsNoTracking()
             .ToListAsync();
+    }
+
+    public async Task<Target?> DeleteTargetByGuid(Guid targetGuid)
+    {
+        await using var transaction = await m_targetsDbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            var targetToDelete = await m_targetsDbContext.Targets.FirstOrDefaultAsync(target => target.Guid == targetGuid);
+
+            if (targetToDelete is null)
+            {
+                return null;
+            }
+            
+            var userTargetToDelete = await m_targetsDbContext.UserTargets.FirstOrDefaultAsync(ut => ut.TargetGuid == targetGuid);
+            if (userTargetToDelete is not null)
+            {
+                _ = m_targetsDbContext.UserTargets.Remove(userTargetToDelete);
+            }
+
+            _ = m_targetsDbContext.Targets.Remove(targetToDelete);
+            
+            await m_targetsDbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return targetToDelete;
+        }
+        catch (Exception exception)
+        {
+            m_logger.LogError($"\"DeleteTargetByGuid\" caught an exception with message: \"{exception.Message}\"");
+            try
+            {
+                await transaction.RollbackAsync();
+            }
+            catch (Exception rollbackException)
+            {
+                m_logger.LogCritical($"Rollback failed, with message: \"{rollbackException.Message}\"");
+            }
+        }
+
+        return null;
+    }
+
+    public async Task<Target?> ReplaceTarget(Target targetWithDifferentValues)
+    {
+        await using var transaction = await m_targetsDbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            var targetToReplace = await m_targetsDbContext.Targets
+                .Where(target => target.Guid == targetWithDifferentValues.Guid)
+                .FirstOrDefaultAsync();
+
+            if (targetToReplace is null)
+            {
+                return null;
+            }
+
+            targetToReplace.Path = targetWithDifferentValues.Path;
+            targetToReplace.Row = targetWithDifferentValues.Row;
+            targetToReplace.Latitude = targetWithDifferentValues.Latitude;
+            targetToReplace.Longitude = targetWithDifferentValues.Longitude;
+            targetToReplace.MinCloudCover = targetWithDifferentValues.MinCloudCover;
+            targetToReplace.MaxCloudCover = targetWithDifferentValues.MaxCloudCover;
+            targetToReplace.NotificationOffset = targetWithDifferentValues.NotificationOffset;
+
+            await m_targetsDbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return targetToReplace;
+        }
+        catch (Exception exception)
+        {
+            m_logger.LogError($"\"ReplaceTarget\" caught an exception with message: \"{exception.Message}\"");
+            try
+            {
+                await transaction.RollbackAsync();
+            }
+            catch (Exception rollbackException)
+            {
+                m_logger.LogCritical($"Rollback failed, with message: \"{rollbackException.Message}\"");
+            }
+        }
+
+        return null;
     }
 }

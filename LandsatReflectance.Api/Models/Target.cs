@@ -1,5 +1,8 @@
 ﻿namespace LandsatReflectance.Backend.Models;
 
+// If you change the properties, double check to account for changes in:
+// - TargetsService.ReplaceTarget
+
 public class Target
 {
     public Guid Guid { get; init; } = Guid.NewGuid();

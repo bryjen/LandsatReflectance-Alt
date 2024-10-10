@@ -56,11 +56,7 @@ public class AuthenticationController : ControllerBase
             response.Data = null;
         }
 
-        Func<object, ObjectResult> toObjectResult = response.ErrorMessage is not null
-            ? data => StatusCode(500, data)
-            : Ok;
-
-        return toObjectResult(JsonSerializer.Serialize(response, jsonOptions.Value.JsonSerializerOptions));
+        return ToObjectResult(jsonOptions.Value.JsonSerializerOptions, response);
     }
 
     
@@ -100,10 +96,16 @@ public class AuthenticationController : ControllerBase
             response.Data = null;
         }
 
-        Func<object, ObjectResult> toObjectResult = response.ErrorMessage is not null
-            ? data => StatusCode(500, data)
-            : Ok;
-
-        return toObjectResult(JsonSerializer.Serialize(response, jsonOptions.Value.JsonSerializerOptions));
+        return ToObjectResult(jsonOptions.Value.JsonSerializerOptions, response);
+    }
+    
+    
+    private ObjectResult ToObjectResult<T>(JsonSerializerOptions jsonSerializerOptions, ResponseBase<T> responseBase) 
+        where T : class
+    {
+        var serializedData = JsonSerializer.Serialize(responseBase, jsonSerializerOptions);
+        return responseBase.ErrorMessage is not null
+            ? StatusCode(500, serializedData)
+            : Ok(serializedData);
     }
 }
