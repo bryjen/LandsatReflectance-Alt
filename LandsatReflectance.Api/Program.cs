@@ -1,6 +1,8 @@
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using LandsatReflectance.Api.Services;
+using LandsatReflectance.Api.Utils;
 using LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
 using LandsatReflectance.Backend.Utils;
 using LandsatReflectance.Backend.Utils.SourceGenerators;
@@ -27,7 +29,9 @@ builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
     options.JsonSerializerOptions.WriteIndented = true;
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;  // To prevent escaping of '&'
 });
+
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
@@ -37,8 +41,20 @@ var dbConnectionString = EnvironmentVariablesService.DbConnectionString;
 builder.Services.AddDbContext<UsersDbContext>(options => options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString)));
 builder.Services.AddDbContext<TargetsDbContext>(options => options.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString)));
 
+builder.Services.AddSingleton<UsgsAuthTokenStore>();
+
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<TargetsService>();
+builder.Services.AddScoped<UsgsImageService>();
+
+builder.Services.AddTransient<UsgsAuthHandler>();
+
+builder.Services.AddHttpClient<UsgsImageService>(((_, httpClient) =>
+    {
+        httpClient.BaseAddress = new Uri("https://m2m.cr.usgs.gov/api/api/json/stable/");
+    }))
+    .AddHttpMessageHandler<UsgsAuthHandler>();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
