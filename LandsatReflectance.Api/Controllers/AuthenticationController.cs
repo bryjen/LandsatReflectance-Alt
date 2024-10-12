@@ -22,8 +22,20 @@ public class AuthenticationController : ControllerBase
         [FromServices] UsersService usersService,
         [FromBody] UserLoginInfo userLoginInfo)
     {
-        // TODO #1: Add validation rules for email & 
-
+        ResponseBase<User> response = new();
+        
+        if (!IsEmailValid(userLoginInfo.Email))
+        {
+            response.ErrorMessage = $"The email \"{userLoginInfo.Email}\" is not valid.";
+            return BadRequest(response);
+        }
+        
+        if (!IsPasswordValid(userLoginInfo.Password))
+        {
+            response.ErrorMessage = $"The password \"{userLoginInfo.Password}\" is not valid.\n - The password should be at least 8 characters long.";
+            return BadRequest(response);
+        }
+        
         var passwordHasher = new PasswordHasher<string>();
         var newUser = new User
         {
@@ -32,8 +44,6 @@ public class AuthenticationController : ControllerBase
             PasswordHash = passwordHasher.HashPassword(userLoginInfo.Email, userLoginInfo.Password),
             IsEmailEnabled = true
         };
-
-        ResponseBase<User> response = new();
 
         try
         {
@@ -97,5 +107,29 @@ public class AuthenticationController : ControllerBase
         return responseBase.ErrorMessage is not null
             ? StatusCode(500, responseBase)
             : Ok(responseBase);
+    }
+    
+    // see 'https://stackoverflow.com/questions/1365407/c-sharp-code-to-validate-email-address'
+    private static bool IsEmailValid(string email)
+    {
+        var trimmedEmail = email.Trim();
+
+        if (trimmedEmail.EndsWith("."))
+            return false;
+
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == trimmedEmail;
+        }
+        catch
+        {
+            return false;
+        }    
+    }
+
+    private static bool IsPasswordValid(string password)
+    {
+        return password.Length >= 8;
     }
 }
