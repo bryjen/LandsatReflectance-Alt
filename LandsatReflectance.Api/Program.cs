@@ -34,6 +34,7 @@ builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;  // To prevent escaping of '&'
 });
 
+builder.Services.AddResponseCaching();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
@@ -117,6 +118,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseResponseCaching();
 
 app.UseMiddleware<BaseErrorHandlingMiddleware>();
 

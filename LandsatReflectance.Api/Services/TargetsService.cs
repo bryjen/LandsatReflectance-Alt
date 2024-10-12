@@ -32,7 +32,7 @@ public sealed class TargetsService
         m_targetsDbContext = targetsDbContext;
     }
 
-    public async Task AddTargets(Guid userGuid, List<Target> targets)
+    public async Task TryAddTargetsAsync(Guid userGuid, List<Target> targets)
     {
         await using var transaction = await m_targetsDbContext.Database.BeginTransactionAsync();
 
@@ -58,7 +58,7 @@ public sealed class TargetsService
         }
     }
     
-    public async Task<List<Target>> GetTargetsByUserEmail(string email)
+    public async Task<List<Target>> TryGetTargetsByUserEmailAsync(string email)
     {
         string rawSqlTemplate = 
             $"""
@@ -75,7 +75,7 @@ public sealed class TargetsService
             .ToListAsync();
     }
 
-    public async Task<Target?> DeleteTargetByGuid(Guid targetGuid)
+    public async Task<Target?> TryDeleteTargetByGuidAsync(Guid targetGuid)
     {
         await using var transaction = await m_targetsDbContext.Database.BeginTransactionAsync();
 
@@ -117,7 +117,7 @@ public sealed class TargetsService
         return null;
     }
 
-    public async Task<Target?> ReplaceTarget(Target targetWithDifferentValues)
+    public async Task<Target?> TryReplaceTargetAsync(Target targetWithDifferentValues)
     {
         await using var transaction = await m_targetsDbContext.Database.BeginTransactionAsync();
 

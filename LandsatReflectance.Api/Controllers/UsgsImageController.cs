@@ -4,10 +4,7 @@ using LandsatReflectance.Backend.Models.ResponseModels;
 using LandsatReflectance.Backend.Models.UsgsApi;
 using LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
 using LandsatReflectance.Backend.Models.UsgsApi.Types.Request;
-using LandsatReflectance.Backend.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using JsonException = Newtonsoft.Json.JsonException;
 
 namespace LandsatReflectance.Api.Controllers;
 
@@ -28,9 +25,8 @@ public class ImageData
 public class UsgsImageController : ControllerBase
 {
     [HttpGet("GetScenes", Name = "GetScenes")]
-    public async Task<IActionResult> GetScenes(
+    public async Task<ActionResult<IEnumerable<ImageData>>> GetScenes(
         [FromServices] ILogger<UsgsImageController> logger,
-        [FromServices] IOptions<JsonOptions> jsonOptions,
         [FromServices] UsgsImageService usgsImageService,
         [FromQuery(Name = "path")] int path, 
         [FromQuery(Name = "row")] int row,
@@ -58,7 +54,7 @@ public class UsgsImageController : ControllerBase
                 Data = asImageData
             };
 
-            return Ok(JsonSerializer.Serialize(response, jsonOptions.Value.JsonSerializerOptions));
+            return Ok(response);
         }
         catch (Exception exception) when (exception is HttpRequestException or JsonException or TaskCanceledException)
         {
@@ -71,7 +67,7 @@ public class UsgsImageController : ControllerBase
             
             logger.LogError($"[{exception.GetHashCode()}] {errorMsg} The operation failed with error message: \"{exception.Message}\"");
             logger.LogTrace($"[{exception.GetHashCode()}] Stack trace:\n{exception.StackTrace}");
-            return StatusCode(500, JsonSerializer.Serialize(response, jsonOptions.Value.JsonSerializerOptions));
+            return StatusCode(500, response);
         }
     }
 

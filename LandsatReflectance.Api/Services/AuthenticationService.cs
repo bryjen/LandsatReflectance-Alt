@@ -66,7 +66,7 @@ public static class AuthenticationService
 #endif
         }
 
-        var user = await usersService.TryGetUser(userEmailClaim);
+        var user = await usersService.TryGetUserAsync(userEmailClaim);
         if (user is null)
         {
 #if DEBUG

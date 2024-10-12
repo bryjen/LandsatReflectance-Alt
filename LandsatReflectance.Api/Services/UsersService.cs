@@ -1,4 +1,5 @@
-﻿using LandsatReflectance.Backend.Models;
+﻿using LandsatReflectance.Api.Exceptions;
+using LandsatReflectance.Backend.Models;
 using LandsatReflectance.Backend.Utils.EFConfigs;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,8 +29,13 @@ public sealed class UsersService
         m_usersDbContext = usersDbContext;
     }
 
-    public async Task TryAddUser(User newUser)
+    public async Task TryAddUserAsync(User newUser)
     {
+        if (await TryGetUserAsync(newUser.Email) is not null)
+        {
+            throw new UserRegistrationException($"A user with email \"{newUser.Email}\" already exists.", newUser);
+        }
+        
         await using var transaction = await m_usersDbContext.Database.BeginTransactionAsync();
 
         try
@@ -40,6 +46,7 @@ public sealed class UsersService
         }
         catch (Exception exception)
         {
+            m_logger.LogError($"\"TryAddUser\" caught an exception with message: \"{exception.Message}\"");
             try
             {
                 await transaction.RollbackAsync();
@@ -51,7 +58,7 @@ public sealed class UsersService
         }
     }
     
-    public async Task<User?> TryGetUser(string email)
+    public async Task<User?> TryGetUserAsync(string email)
     {
         var fetchedUsers = await m_usersDbContext.Users
             .AsNoTracking()

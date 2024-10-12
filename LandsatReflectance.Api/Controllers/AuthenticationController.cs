@@ -1,15 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Authentication;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using LandsatReflectance.Api.Services;
 using LandsatReflectance.Backend.Models;
 using LandsatReflectance.Backend.Models.ResponseModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace LandsatReflectance.Api.Controllers;
 
@@ -25,8 +18,7 @@ public class AuthenticationController : ControllerBase
     
     
     [HttpPost("Register", Name = "Register")]
-    public async Task<IActionResult> RegisterUser(
-        [FromServices] IOptions<JsonOptions> jsonOptions,
+    public async Task<ActionResult<User>> RegisterUser(
         [FromServices] UsersService usersService,
         [FromBody] UserLoginInfo userLoginInfo)
     {
@@ -45,7 +37,7 @@ public class AuthenticationController : ControllerBase
 
         try
         {
-            await usersService.TryAddUser(newUser);
+            await usersService.TryAddUserAsync(newUser);
 
             response.ErrorMessage = null;
             response.Data = newUser;
@@ -56,13 +48,12 @@ public class AuthenticationController : ControllerBase
             response.Data = null;
         }
 
-        return ToObjectResult(jsonOptions.Value.JsonSerializerOptions, response);
+        return ToObjectResult(response);
     }
 
     
     [HttpPost("Login", Name = "Login")]
-    public async Task<IActionResult> LoginUser(
-        [FromServices] IOptions<JsonOptions> jsonOptions,
+    public async Task<ActionResult<string>> LoginUser(
         [FromServices] UsersService usersService,
         [FromBody] UserLoginInfo userLoginInfo)
     {
@@ -70,12 +61,12 @@ public class AuthenticationController : ControllerBase
 
         try
         {
-            var user = await usersService.TryGetUser(userLoginInfo.Email.Trim());
+            var user = await usersService.TryGetUserAsync(userLoginInfo.Email.Trim());
 
             if (user is null)
             {
                 response.ErrorMessage = $"Could not find the user with the email \"{userLoginInfo.Email}\".";
-                return NotFound(JsonSerializer.Serialize(response, jsonOptions.Value.JsonSerializerOptions));
+                return NotFound(response);
             }
             
             var passwordHasher = new PasswordHasher<string>();
@@ -84,7 +75,7 @@ public class AuthenticationController : ControllerBase
             if (passwordVerificationResult is PasswordVerificationResult.Failed)
             {
                 response.ErrorMessage = $"Invalid credentials.";
-                return Unauthorized(JsonSerializer.Serialize(response, jsonOptions.Value.JsonSerializerOptions));
+                return Unauthorized(response);
             }
 
             response.ErrorMessage = null;
@@ -96,16 +87,15 @@ public class AuthenticationController : ControllerBase
             response.Data = null;
         }
 
-        return ToObjectResult(jsonOptions.Value.JsonSerializerOptions, response);
+        return ToObjectResult(response);
     }
     
     
-    private ObjectResult ToObjectResult<T>(JsonSerializerOptions jsonSerializerOptions, ResponseBase<T> responseBase) 
+    private ObjectResult ToObjectResult<T>(ResponseBase<T> responseBase) 
         where T : class
     {
-        var serializedData = JsonSerializer.Serialize(responseBase, jsonSerializerOptions);
         return responseBase.ErrorMessage is not null
-            ? StatusCode(500, serializedData)
-            : Ok(serializedData);
+            ? StatusCode(500, responseBase)
+            : Ok(responseBase);
     }
 }
