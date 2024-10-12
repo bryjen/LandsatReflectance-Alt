@@ -1,4 +1,8 @@
 ﻿@page "/Dashboard"
+@using System.Text.Json
+
+@inject HttpClient HttpClient
+@inject JsonSerializerOptions JsonSerializerOptions
 
 @code {
     private RenderFragment Render => __builder =>

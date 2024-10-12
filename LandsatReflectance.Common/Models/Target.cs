@@ -1,4 +1,4 @@
-﻿namespace LandsatReflectance.Backend.Models;
+﻿namespace LandsatReflectance.Common.Models;
 
 // If you change the properties, double check to account for changes in:
 // - TargetsService.ReplaceTarget

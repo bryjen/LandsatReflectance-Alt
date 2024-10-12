@@ -1,4 +1,4 @@
-﻿namespace LandsatReflectance.Backend.Models.UsgsApi.Types;
+﻿namespace LandsatReflectance.Api.Models.UsgsApi.Types;
 
 // We cannot use the name 'Options' because it's the name of a property for json source generators (stuff that speeds up
 // serialization). Naming it 'Options' will cause the code to error during compilation, but won't produce any intellisense

@@ -21,4 +21,12 @@
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\LandsatReflectance.Common\LandsatReflectance.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Models\ResponseModels\" />
+    </ItemGroup>
+
 </Project>

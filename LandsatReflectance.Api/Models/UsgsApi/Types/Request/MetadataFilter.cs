@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using LandsatReflectance.Backend.Utils;
 
-namespace LandsatReflectance.Backend.Models.UsgsApi.Types.Request;
+namespace LandsatReflectance.Api.Models.UsgsApi.Types.Request;
 
 
 [JsonConverter(typeof(MetadataFilterConverter))]

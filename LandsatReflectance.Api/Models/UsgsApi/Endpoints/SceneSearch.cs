@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
-using LandsatReflectance.Backend.Models.UsgsApi.Types;
-using LandsatReflectance.Backend.Models.UsgsApi.Types.Request;
+using LandsatReflectance.Api.Models.UsgsApi.Types.Request;
+using LandsatReflectance.Api.Models.UsgsApi.Types;
 
-namespace LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
+namespace LandsatReflectance.Api.Models.UsgsApi.Endpoints;
 
 [Serializable]
 public class SceneSearchRequest

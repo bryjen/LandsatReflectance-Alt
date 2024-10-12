@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandsatReflectance.Api", "L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandsatReflectance.UI", "LandsatReflectance.UI\LandsatReflectance.UI.csproj", "{DC245DC7-B739-47F3-AC80-908DE8C9794D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandsatReflectance.Common", "LandsatReflectance.Common\LandsatReflectance.Common.csproj", "{8E668605-B207-4589-BCEC-D6C1CBFC573B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{DC245DC7-B739-47F3-AC80-908DE8C9794D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC245DC7-B739-47F3-AC80-908DE8C9794D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC245DC7-B739-47F3-AC80-908DE8C9794D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E668605-B207-4589-BCEC-D6C1CBFC573B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E668605-B207-4589-BCEC-D6C1CBFC573B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E668605-B207-4589-BCEC-D6C1CBFC573B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E668605-B207-4589-BCEC-D6C1CBFC573B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

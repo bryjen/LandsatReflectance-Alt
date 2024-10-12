@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using LandsatReflectance.Api.Services;
-using LandsatReflectance.Backend.Models;
-using LandsatReflectance.Backend.Models.ResponseModels;
+using LandsatReflectance.Common.Models;
+using LandsatReflectance.Common.Models.ResponseModels;
+using UserLoginInfo = LandsatReflectance.Common.Models.Request.UserLoginInfo;
 
 namespace LandsatReflectance.Api.Controllers;
 
@@ -10,13 +11,6 @@ namespace LandsatReflectance.Api.Controllers;
 [Route("[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    public class UserLoginInfo 
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
-    
-    
     [HttpPost("Register", Name = "Register")]
     public async Task<ActionResult<User>> RegisterUser(
         [FromServices] UsersService usersService,

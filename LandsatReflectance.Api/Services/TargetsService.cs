@@ -1,5 +1,6 @@
-﻿using LandsatReflectance.Backend.Models;
+﻿using LandsatReflectance.Api.Models;
 using LandsatReflectance.Backend.Utils.EFConfigs;
+using LandsatReflectance.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LandsatReflectance.Api.Services;

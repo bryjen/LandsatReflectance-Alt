@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using LandsatReflectance.Backend.Models.UsgsApi.Types.Request;
+using LandsatReflectance.Api.Models.UsgsApi.Types.Request;
 
 namespace LandsatReflectance.Backend.Utils;
 

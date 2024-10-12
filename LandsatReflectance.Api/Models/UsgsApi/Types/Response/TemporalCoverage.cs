@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using LandsatReflectance.Backend.Utils;
 
-namespace LandsatReflectance.Backend.Models.UsgsApi.Types;
+namespace LandsatReflectance.Api.Models.UsgsApi.Types;
 
 public class TemporalCoverage
 {

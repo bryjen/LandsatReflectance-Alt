@@ -1,7 +1,6 @@
-﻿using System.Globalization;
-using LandsatReflectance.Backend.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using LandsatReflectance.Common.Models;
 
 namespace LandsatReflectance.Backend.Utils.EFConfigs;
 

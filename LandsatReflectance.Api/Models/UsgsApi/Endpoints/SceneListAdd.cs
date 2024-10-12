@@ -1,4 +1,4 @@
-﻿namespace LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
+﻿namespace LandsatReflectance.Api.Models.UsgsApi.Endpoints;
 
 [Serializable]
 public class SceneListAddRequest

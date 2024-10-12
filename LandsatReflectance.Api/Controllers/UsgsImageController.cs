@@ -1,24 +1,12 @@
 ﻿using System.Text.Json;
 using LandsatReflectance.Api.Services;
-using LandsatReflectance.Backend.Models.ResponseModels;
-using LandsatReflectance.Backend.Models.UsgsApi;
-using LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
-using LandsatReflectance.Backend.Models.UsgsApi.Types.Request;
+using LandsatReflectance.Api.Models.UsgsApi;
+using LandsatReflectance.Api.Models.UsgsApi.Endpoints;
+using LandsatReflectance.Api.Models.UsgsApi.Types.Request;
+using LandsatReflectance.Common.Models.ResponseModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LandsatReflectance.Api.Controllers;
-
-
-public class ImageData
-{
-    public required string WholeImageUri { get; set; } = string.Empty;
-    public required string PixelImageUriTemplate { get; set; } = string.Empty;
-    
-    public required DateTime AcquisitionDate { get; set; } = DateTime.MinValue;
-    public required DateTime PublishDate { get; set; } = DateTime.MinValue;
-    public required int CloudCover { get; set; }
-}
-
 
 [ApiController]
 [Route("[controller]")]

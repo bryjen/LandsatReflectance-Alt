@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
-using LandsatReflectance.Backend.Models.UsgsApi;
-using LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
+using LandsatReflectance.Api.Models.UsgsApi;
+using LandsatReflectance.Api.Models.UsgsApi.Endpoints;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 

@@ -1,4 +1,4 @@
-﻿namespace LandsatReflectance.Backend.Models;
+﻿namespace LandsatReflectance.Api.Models;
 
 // Class representing the join table between 'User' and 'Targets' in the db.
 

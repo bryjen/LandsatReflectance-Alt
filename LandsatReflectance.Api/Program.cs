@@ -4,7 +4,7 @@ using System.Text.Json;
 using LandsatReflectance.Api.Middleware;
 using LandsatReflectance.Api.Services;
 using LandsatReflectance.Api.Utils;
-using LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
+using LandsatReflectance.Api.Models.UsgsApi.Endpoints;
 using LandsatReflectance.Backend.Utils;
 using LandsatReflectance.Backend.Utils.SourceGenerators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -107,9 +107,17 @@ if (builder.Environment.IsDevelopment())
     builder.Services.AddSwaggerGen();
 }
 
+builder.Services.AddCors();
+
 
 
 var app = builder.Build();
+
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(_ => true)
+    .AllowCredentials());
 
 if (app.Environment.IsDevelopment())
 {

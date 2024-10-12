@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using LandsatReflectance.Backend.Models.UsgsApi;
-using LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
+using LandsatReflectance.Api.Models.UsgsApi;
+using LandsatReflectance.Api.Models.UsgsApi.Endpoints;
 using LandsatReflectance.Backend.Utils.SourceGenerators;
 
 

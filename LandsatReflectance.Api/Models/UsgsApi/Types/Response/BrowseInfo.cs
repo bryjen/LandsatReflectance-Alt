@@ -1,4 +1,4 @@
-﻿namespace LandsatReflectance.Backend.Models.UsgsApi.Types;
+﻿namespace LandsatReflectance.Api.Models.UsgsApi.Types;
 
 public class BrowseInfo
 {

@@ -1,4 +1,4 @@
-﻿namespace LandsatReflectance.Backend.Models.UsgsApi;
+﻿namespace LandsatReflectance.Api.Models.UsgsApi;
 
 // Responses from the API have the base structure defined in 'UsgsApiResponse'.
 // The 'Data' property differs depending on the endpoint we're querying.

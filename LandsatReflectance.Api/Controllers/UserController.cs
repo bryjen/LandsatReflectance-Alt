@@ -1,7 +1,8 @@
 ﻿using System.Security.Claims;
 using LandsatReflectance.Api.Services;
-using LandsatReflectance.Backend.Models;
-using LandsatReflectance.Backend.Models.ResponseModels;
+using LandsatReflectance.Api.Models;
+using LandsatReflectance.Common.Models;
+using LandsatReflectance.Common.Models.ResponseModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;

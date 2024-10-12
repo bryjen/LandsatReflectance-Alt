@@ -1,4 +1,4 @@
-﻿namespace LandsatReflectance.Backend.Models.ResponseModels;
+﻿namespace LandsatReflectance.Common.Models.ResponseModels;
 
 public class ResponseBase<T> where T : class
 {

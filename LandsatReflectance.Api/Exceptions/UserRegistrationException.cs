@@ -1,4 +1,5 @@
-﻿using LandsatReflectance.Backend.Models;
+﻿using LandsatReflectance.Api.Models;
+using LandsatReflectance.Common.Models;
 
 namespace LandsatReflectance.Api.Exceptions;
 

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using LandsatReflectance.Backend.Models.UsgsApi.Types;
+using LandsatReflectance.Api.Models.UsgsApi.Types;
 
-namespace LandsatReflectance.Backend.Models.UsgsApi;
+namespace LandsatReflectance.Api.Models.UsgsApi;
 
 public class SceneData
 {

@@ -1,4 +1,4 @@
-﻿namespace LandsatReflectance.Backend.Models.UsgsApi.Types.Request;
+﻿namespace LandsatReflectance.Api.Models.UsgsApi.Types.Request;
 
 public class SceneFilter
 {

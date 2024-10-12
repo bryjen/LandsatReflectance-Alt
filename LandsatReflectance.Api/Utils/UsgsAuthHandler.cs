@@ -1,7 +1,7 @@
 ﻿using System.Security.Authentication;
 using System.Text.Json;
 using LandsatReflectance.Api.Services;
-using LandsatReflectance.Backend.Models.UsgsApi.Endpoints;
+using LandsatReflectance.Api.Models.UsgsApi.Endpoints;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 

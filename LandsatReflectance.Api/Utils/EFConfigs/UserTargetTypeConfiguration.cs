@@ -1,4 +1,5 @@
-﻿using LandsatReflectance.Backend.Models;
+﻿using LandsatReflectance.Api.Models;
+using LandsatReflectance.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

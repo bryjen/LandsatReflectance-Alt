@@ -1,4 +1,4 @@
-﻿namespace LandsatReflectance.Backend.Models;
+﻿namespace LandsatReflectance.Common.Models;
 
 public class User
 {

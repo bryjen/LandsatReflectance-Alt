@@ -2,7 +2,8 @@
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
-using LandsatReflectance.Backend.Models;
+using LandsatReflectance.Api.Models;
+using LandsatReflectance.Common.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LandsatReflectance.Api.Services;
