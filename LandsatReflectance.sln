@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandsatReflectance.Api", "LandsatReflectance.Api\LandsatReflectance.Api.csproj", "{3D71EBD1-0A2B-4B8D-88C4-373D22BF4457}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandsatReflectance.UI", "LandsatReflectance.UI\LandsatReflectance.UI.csproj", "{DC245DC7-B739-47F3-AC80-908DE8C9794D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{3D71EBD1-0A2B-4B8D-88C4-373D22BF4457}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D71EBD1-0A2B-4B8D-88C4-373D22BF4457}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D71EBD1-0A2B-4B8D-88C4-373D22BF4457}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC245DC7-B739-47F3-AC80-908DE8C9794D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC245DC7-B739-47F3-AC80-908DE8C9794D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC245DC7-B739-47F3-AC80-908DE8C9794D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC245DC7-B739-47F3-AC80-908DE8C9794D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
