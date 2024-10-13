@@ -34,6 +34,7 @@ builder.Services.AddScoped(sp =>
     return httpClient;
 });
 
+builder.Services.AddScoped<UserInterfaceService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CurrentUserService>();
 
