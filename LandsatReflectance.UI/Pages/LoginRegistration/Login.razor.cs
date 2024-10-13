@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace LandsatReflectance.UI.Pages;
+namespace LandsatReflectance.UI.Pages.LoginRegistration;
 
 public partial class Login : ComponentBase
 {
@@ -19,5 +19,19 @@ public partial class Login : ComponentBase
             ? InputType.Text 
             : InputType.Password;
     }
+#endregion
+
+#region RegistrationPanel
+    private string m_registrationEmail = string.Empty;
+
+    private void GoToRegistrationPage()
+    {
+        string emailQueryString = string.IsNullOrWhiteSpace(m_registrationEmail)
+            ? string.Empty
+            : "?email=" + Uri.EscapeDataString(m_registrationEmail);
+        
+        NavigationManager.NavigateTo($"/Register{emailQueryString}");
+    }
+
 #endregion
 }

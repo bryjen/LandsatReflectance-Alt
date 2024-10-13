@@ -1,6 +1,8 @@
 ﻿@page "/Login"
 @layout LoginRegisterLayout
 
+@inject NavigationManager NavigationManager
+
 <div style="width: 30%">
     @RenderLoginPanel
     <br/>
@@ -74,11 +76,12 @@
             </MudText>
             
             <MudTextField T="string" Label="Email" ShrinkLabel
+                          @bind-Value="@m_registrationEmail"
                           InputType="InputType.Email" Margin="Margin.Dense" Variant="Variant.Filled" Typo="Typo.caption"
                           Class="mt-3">
             </MudTextField>
 
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="mt-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="mt-4" OnClick="@GoToRegistrationPage">
                 <MudText Typo="Typo.caption">
                     Register
                 </MudText>
