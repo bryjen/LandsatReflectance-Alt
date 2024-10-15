@@ -1,11 +1,15 @@
 ﻿using FluentValidation;
+using LandsatReflectance.UI.Components;
+using LandsatReflectance.UI.Exceptions.Api;
+using LandsatReflectance.UI.Utils;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.JSInterop;
 using MudBlazor;
 using Severity = MudBlazor.Severity;
 
 namespace LandsatReflectance.UI.Pages.LoginRegistration;
-
-
 
 public class UserModel
 {
@@ -57,9 +61,14 @@ public partial class Registration : ComponentBase
     [Parameter]
     public string Email { get; set; } = string.Empty;
 
+    [CascadingParameter]
+    public required FullPageLoadingOverlay FullPageLoadingOverlay { get; set; }
+    
     private MudForm m_mudForm = new();
     private UserModelValidator m_userModelValidator = new();
     private UserModel m_userModel = new();
+
+    private bool m_isSendingData = false;
     
     
     protected override void OnInitialized()
@@ -91,11 +100,93 @@ public partial class Registration : ComponentBase
     }
 #endregion
 
+    private void HandleKeyDown(KeyboardEventArgs keyboardEventArgs)
+    {
+        if (!m_isSendingData && keyboardEventArgs.Key == "Enter")
+        {
+            _ = SubmitForm();
+        }
+    }
+    
+    private async Task GoToLoginPage()
+    {
+        var workFunc = async () =>
+        {
+            await Task.Delay(TimeSpan.FromSeconds(Rand.GeneratePageSwitchDelayTime()));
+        };
+        var onWorkFinishedCallback = () =>
+        {
+            Snackbar.Clear();
+            NavigationManager.NavigateTo("Login");
+            return Task.CompletedTask;
+        };
+
+        await FullPageLoadingOverlay.ExecuteWithOverlay(workFunc, onWorkFinishedCallback);
+    }
 
     private async Task SubmitForm()
     {
         await m_mudForm.Validate();
+        if (!m_mudForm.IsValid)
+        {
+            return;
+        }
 
-        Snackbar.Add($"Form status: {m_mudForm.IsValid}", m_mudForm.IsValid ? Severity.Info : Severity.Error);
+        m_isSendingData = true;
+        StateHasChanged();
+        
+        // await Task.Delay(TimeSpan.FromSeconds(Rand.GenerateFormDelayTime()));
+        try
+        {
+            await UserService.RegisterAsync(m_userModel);
+            
+            var workFunc = async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(Rand.GeneratePageSwitchDelayTime()));
+            };
+            var onWorkFinishedCallback = () =>
+            {
+                NavigationManager.NavigateTo("/");
+                Snackbar.Add("Successfully registered.", Severity.Info);
+                return Task.CompletedTask;
+            };
+            
+            m_isSendingData = false;
+            StateHasChanged();
+
+            await FullPageLoadingOverlay.ExecuteWithOverlay(workFunc, onWorkFinishedCallback);
+        }
+        catch (BadRequestException badRequestException)
+        {
+            Snackbar.Add(badRequestException.Message, Severity.Error);
+        }
+        catch (ServerRequestException serverRequestException)
+        {
+            Snackbar.Add(serverRequestException.Message, Severity.Error, options =>
+            {
+                if (Environment.IsDevelopment())
+                {
+                    options.Action = "More information";
+                    options.ActionVariant = Variant.Text;
+                    options.Onclick = _ =>
+                    {
+                        var parameters = new DialogParameters<ExceptionDetailsDialog>
+                        {
+                            { dialog => dialog.Exception, serverRequestException }
+                        };
+
+                        var dialogOptions = new DialogOptions
+                        {
+                            BackdropClick = false,
+                            MaxWidth = MaxWidth.Large,
+                            FullWidth = true
+                        };
+
+                        DialogService.Show<ExceptionDetailsDialog>(null, parameters, dialogOptions);
+                        return Task.CompletedTask;
+                    };
+                }
+            });
+        }
     }
 }

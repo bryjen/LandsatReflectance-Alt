@@ -1,6 +1,7 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Blazored.LocalStorage;
+using LandsatReflectance.Common.Converters;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using LandsatReflectance.UI;
@@ -22,6 +23,7 @@ builder.Services.AddSingleton(_ =>
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // To prevent escaping of '&'
     };
+    jsonSerializerOptions.Converters.Add(new UserWithTokenConverter());
     return jsonSerializerOptions;
 });
 

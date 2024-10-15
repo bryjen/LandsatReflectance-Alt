@@ -7,6 +7,7 @@ using LandsatReflectance.Api.Utils;
 using LandsatReflectance.Api.Models.UsgsApi.Endpoints;
 using LandsatReflectance.Backend.Utils;
 using LandsatReflectance.Backend.Utils.SourceGenerators;
+using LandsatReflectance.Common.Converters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
 {
+    options.JsonSerializerOptions.Converters.Insert(0, new UserWithTokenConverter());
     options.JsonSerializerOptions.Converters.Insert(0, new CustomDateTimeConverter());
     options.JsonSerializerOptions.Converters.Insert(0, new MetadataConverter());
     options.JsonSerializerOptions.Converters.Insert(0, new UsgsApiResponseConverter<LoginTokenResponse>());

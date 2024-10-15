@@ -1,14 +1,18 @@
 ﻿@using LandsatReflectance.UI.Services
 @using MudBlazor.Utilities
+@using LandsatReflectance.UI.Components
 
 @inherits LayoutComponentBase
 
 @inject UserInterfaceService UserInterfaceService
+@inject CurrentUserService CurrentUserService
 
 <MudThemeProvider Theme="@UserInterfaceService.MudTheme" IsDarkMode="UserInterfaceService.IsDarkMode"/>
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
+
+<FullPageLoadingOverlay @ref="@m_fullPageLoadingOverlay" />
 
 <style>
     .logo {
@@ -28,17 +32,28 @@
              <MudAppBar Elevation="1">
                  <div style="@m_mudAppBarDivStyles">
                      
-                     <div class="logo" alt="Flat Earthers Logo" src=""/>
+                     <div class="logo" alt="Flat Earthers Logo"></div>
                      
-                     <MudText Typo="Typo.caption" Class="ml-3">Flat Earthers</MudText>
+                     @if (CurrentUserService.User is null)
+                     {
+                         <MudText Typo="Typo.caption" Class="ml-3">Flat Earthers</MudText>
+                     }
+                     else
+                     {
+                         <MudLink Typo="Typo.caption" Style="font-size: 0.7rem">
+                             @CurrentUserService.User.Email
+                         </MudLink>
+                     }
                  </div>
              </MudAppBar>
              
              <MudMainContent Class="mt-16 pa-4" Style="margin: 0 15rem">
                  <MudStack Justify="Justify.FlexStart" AlignItems="AlignItems.Start" StretchItems="StretchItems.None" Row="@true"
                            Style="margin: 2rem 0 0 0">
-                     @RenderTextBlock
-                     @Body
+                     <CascadingValue Value="@m_fullPageLoadingOverlay">
+                         @RenderTextBlock
+                         @Body
+                     </CascadingValue>
                  </MudStack>
 
              </MudMainContent>
@@ -119,4 +134,6 @@
         .AddStyle("width: 100%")
         .AddStyle(ContentMargins)
         .Build();
+
+    private FullPageLoadingOverlay m_fullPageLoadingOverlay = new();
 }

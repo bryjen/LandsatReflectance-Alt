@@ -1,6 +1,22 @@
 ﻿@using LandsatReflectance.UI.Services
 @inherits LayoutComponentBase
+
 @inject UserInterfaceService UserInterfaceService
+@inject CurrentUserService CurrentUserService
+
+
+
+<style>
+    .logo {
+        background-image: url('logo.webp');
+        height: 70%;
+        aspect-ratio: 1 / 1;
+        background-size: cover;
+        background-position: center;
+
+        clip-path: circle();
+    }
+</style>
 
 <MudThemeProvider Theme="@UserInterfaceService.MudTheme" IsDarkMode="UserInterfaceService.IsDarkMode"/>
 <MudPopoverProvider />
@@ -10,15 +26,23 @@
 <div class="page mud-layout">
      <main>
         <MudLayout>
-            <MudAppBar Elevation="1">
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
-                <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+            <MudAppBar Elevation="1" Dense="true">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" 
+                               OnClick="@((e) => DrawerToggle())"
+                               Class="mr-6"/>
+                <div alt="Flat Earthers Logo" class="logo mx-2"></div>
+                <MudText Typo="Typo.body1" Class="mx-2">Flat Earthers</MudText>
                 
                 <MudSpacer/>
+
+                <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"
+                               Class="mx-2"/>
                 
-                <MudNavLink Href="/Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AccountCircle"/>
-                <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
+                @RenderAccountInformation
+                
+@*
                 <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End"/>
+*@
             </MudAppBar>
             <MudDrawer @bind-Open="m_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
                 <NavMenu/>
@@ -36,9 +60,29 @@
     <a class="dismiss">🗙</a>
 </div>
 
+
+
 @code {
-    private bool m_drawerOpen = false;
+    private RenderFragment RenderAccountInformation => __builder =>
+    {
+        if (CurrentUserService.User is null)
+        {
+            <MudButton Href="/Login" Variant="Variant.Text" Class="mx-1">
+                Sign in
+            </MudButton>
+            <MudButton Href="/Register" Variant="Variant.Outlined" Class="mx-1">
+                Sign up
+            </MudButton>
+        }
+        else
+        {
+            <MudLink Typo="Typo.caption" Style="font-size: 0.7rem">
+                @CurrentUserService.User.Email
+            </MudLink>
+        }
+    };
     
+    private bool m_drawerOpen = false;
     
     private void DrawerToggle()
     {

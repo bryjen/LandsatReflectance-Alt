@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using LandsatReflectance.Api.Services;
 using LandsatReflectance.Common.Models;
 using LandsatReflectance.Common.Models.ResponseModels;
+using Microsoft.Extensions.Options;
 using UserLoginInfo = LandsatReflectance.Common.Models.Request.UserLoginInfo;
 
 namespace LandsatReflectance.Api.Controllers;
@@ -11,12 +13,20 @@ namespace LandsatReflectance.Api.Controllers;
 [Route("[controller]")]
 public class AuthenticationController : ControllerBase
 {
+    private readonly JsonSerializerOptions m_jsonSerializerOptions;
+    
+    public AuthenticationController(IOptions<JsonOptions> jsonOptions)
+    {
+        m_jsonSerializerOptions = jsonOptions.Value.JsonSerializerOptions;
+    }
+    
+    
     [HttpPost("Register", Name = "Register")]
     public async Task<ActionResult<User>> RegisterUser(
         [FromServices] UsersService usersService,
         [FromBody] UserLoginInfo userLoginInfo)
     {
-        ResponseBase<User> response = new();
+        ResponseBase<UserWithToken> response = new();
         
         if (!IsEmailValid(userLoginInfo.Email))
         {
@@ -44,7 +54,11 @@ public class AuthenticationController : ControllerBase
             await usersService.TryAddUserAsync(newUser);
 
             response.ErrorMessage = null;
-            response.Data = newUser;
+            response.Data = new UserWithToken
+            {
+                User = newUser,
+                Token = AuthenticationService.GenerateJwtToken(newUser)
+            };
         }
         catch (Exception exception)
         {
@@ -61,7 +75,7 @@ public class AuthenticationController : ControllerBase
         [FromServices] UsersService usersService,
         [FromBody] UserLoginInfo userLoginInfo)
     {
-        ResponseBase<string> response = new();
+        ResponseBase<UserWithToken> response = new();
 
         try
         {
@@ -83,7 +97,11 @@ public class AuthenticationController : ControllerBase
             }
 
             response.ErrorMessage = null;
-            response.Data = AuthenticationService.GenerateJwtToken(user);
+            response.Data = new UserWithToken
+            {
+                User = user,
+                Token = AuthenticationService.GenerateJwtToken(user)
+            };
         }
         catch (Exception exception)
         {
@@ -100,7 +118,7 @@ public class AuthenticationController : ControllerBase
     {
         return responseBase.ErrorMessage is not null
             ? StatusCode(500, responseBase)
-            : Ok(responseBase);
+            : StatusCode(200, JsonSerializer.Serialize(responseBase, m_jsonSerializerOptions));
     }
     
     // see 'https://stackoverflow.com/questions/1365407/c-sharp-code-to-validate-email-address'
