@@ -1,6 +1,7 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Blazored.LocalStorage;
+using GoogleMapsComponents;
 using LandsatReflectance.Common.Converters;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -13,6 +14,10 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+// Fuck no easy way to hide this thing in wasm
+// TODO: Change & Restrict before making repo public
+builder.Services.AddBlazorGoogleMaps("AIzaSyCDocP3wfMPBO_0YWpaxlZiISEHwgStdQU");
 
 builder.Services.AddSingleton(_ =>
 {

@@ -11,10 +11,10 @@ namespace LandsatReflectance.UI.Services.Api;
 
 public class UserService
 {
-    private JsonSerializerOptions m_jsonSerializerOptions;
-    private ILogger<UserService> m_logger;
-    private HttpClient m_httpClient;
-    private CurrentUserService m_currentUserService;
+    private readonly JsonSerializerOptions m_jsonSerializerOptions;
+    private readonly ILogger<UserService> m_logger;
+    private readonly HttpClient m_httpClient;
+    private readonly CurrentUserService m_currentUserService;
     
     public UserService(
         JsonSerializerOptions jsonSerializerOptions, 
