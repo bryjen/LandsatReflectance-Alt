@@ -5,10 +5,10 @@ namespace LandsatReflectance.Models;
 [ProtoContract]
 public struct LatLong
 {
-    [ProtoMember(1)]
+    [ProtoMember(2)]
     public float Latitude { get; set; }
     
-    [ProtoMember(2)]
+    [ProtoMember(1)]
     public float Longitude { get; set; }
 
     public LatLong(float latitude, float longitude)

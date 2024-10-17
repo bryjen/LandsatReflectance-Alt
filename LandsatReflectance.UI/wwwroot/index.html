@@ -40,7 +40,14 @@
         const arrayBuffer = await response.arrayBuffer(); // Get the file as an ArrayBuffer
         return new Uint8Array(arrayBuffer);
     }
+
+    window.consoleInterop = {
+        logList: function (list) {
+            console.log(list);  // This will log the list as an expandable object
+        }
+    };
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/6.5.0/turf.min.js"></script>
 
 <script src="_content/BlazorGoogleMaps/js/objectManager.js"></script>
 <script src="_framework/blazor.webassembly.js"></script>

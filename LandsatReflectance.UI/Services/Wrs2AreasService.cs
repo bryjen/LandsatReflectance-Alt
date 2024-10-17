@@ -12,7 +12,7 @@ public class Wrs2AreasService
     private readonly IWebAssemblyHostEnvironment m_environment;
     private readonly IJSRuntime m_jsRuntime;
     
-    private Wrs2Area[] m_wrs2Areas = [];
+    public Wrs2Area[] Wrs2Areas { get; private set; } = [];
     
     
     public Wrs2AreasService(IWebAssemblyHostEnvironment environment, IJSRuntime jsRuntime)
@@ -23,25 +23,25 @@ public class Wrs2AreasService
 
     public bool IsInitialized()
     {
-        return m_wrs2Areas.Length == 0;
+        return Wrs2Areas.Length == 0;
     }
 
     public async Task InitWrs2Areas()
     {
-        if (m_wrs2Areas.Length == 0)
+        if (Wrs2Areas.Length == 0)
         {
-            m_wrs2Areas = await FetchWrs2Areas();
+            Wrs2Areas = await FetchWrs2Areas();
         }
         
         if (m_environment.IsDevelopment())
         {
-            Console.WriteLine($"[Wrs2AreasService] Loaded {m_wrs2Areas.Length} areas.");
+            Console.WriteLine($"[Wrs2AreasService] Loaded {Wrs2Areas.Length} areas.");
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            foreach (var wrs2Area in m_wrs2Areas)
+            foreach (var wrs2Area in Wrs2Areas)
             {
-                IEnumerable<IEnumerable<LatLngLiteral>> paths = m_wrs2Areas
+                IEnumerable<IEnumerable<LatLngLiteral>> paths = Wrs2Areas
                     .Select(area => area.LatLongCoordinates.Select(latLong => new LatLngLiteral(latLong.Latitude, latLong.Longitude)));
                 
                 var polygonOptions = new PolygonOptions
@@ -79,6 +79,7 @@ public class Wrs2AreasService
         }
 
         using var decompressedByteMemoryStream = new MemoryStream(decompressedBytes);
-        return ProtoBuf.Serializer.Deserialize<Wrs2Area[]>(decompressedByteMemoryStream);
+        return ProtoBuf.Serializer.Deserialize<Wrs2Area[]>(decompressedByteMemoryStream)
+            .ToArray();
     }
 }
