@@ -1,8 +1,11 @@
 ﻿@using LandsatReflectance.UI.Services
+@using LandsatReflectance.UI.Components
 @inherits LayoutComponentBase
 
 @inject UserInterfaceService UserInterfaceService
 @inject CurrentUserService CurrentUserService
+
+@inject Wrs2AreasService Wrs2AreasService
 
 
 
@@ -22,6 +25,8 @@
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
+
+<FullPageLoadingOverlay @ref="@m_fullPageLoadingOverlay" />
 
 <div class="page mud-layout">
      <main>
@@ -48,7 +53,9 @@
                 <NavMenu/>
             </MudDrawer>
             <MudMainContent>
-                @Body
+                <CascadingValue Value="@m_fullPageLoadingOverlay">
+                    @Body
+                </CascadingValue>
             </MudMainContent>
         </MudLayout>
     </main>
@@ -81,7 +88,20 @@
             </MudLink>
         }
     };
+
+    private FullPageLoadingOverlay m_fullPageLoadingOverlay = new();
+
     
+    protected override async Task OnAfterRenderAsync(bool isFirstRender)
+    {
+        if (Wrs2AreasService.IsInitialized())
+        {
+            var workFunc = async () => await Wrs2AreasService.InitWrs2Areas();
+            var onWorkFinishedCallback = () => Task.CompletedTask;
+            await m_fullPageLoadingOverlay.ExecuteWithOverlay("Loading landsat area data.\nPlease wait ...", workFunc, onWorkFinishedCallback);
+        }
+    }
+
     private bool m_drawerOpen = false;
     
     private void DrawerToggle()

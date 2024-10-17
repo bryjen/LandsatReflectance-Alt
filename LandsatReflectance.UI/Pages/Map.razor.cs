@@ -1,6 +1,7 @@
 ﻿using GoogleMapsComponents;
 using GoogleMapsComponents.Maps;
 using LandsatReflectance.Common.Models;
+using LandsatReflectance.UI.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
@@ -15,6 +16,10 @@ public partial class Map : ComponentBase
     
     [Inject]
     public required ISnackbar Snackbar { get; set; } 
+    
+    [Inject]
+    public required Wrs2AreasService Wrs2AreasService { get; set; } 
+    
     
     private GoogleMap m_googleMap = null!;
     private MapOptions m_mapOptions = null!;

@@ -33,6 +33,15 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+<script>
+    async function fetchWrs2AreasGz() {
+        const response = await fetch('/data/wrs_areas.bin.gz');
+        const arrayBuffer = await response.arrayBuffer(); // Get the file as an ArrayBuffer
+        return new Uint8Array(arrayBuffer);
+    }
+</script>
+
 <script src="_content/BlazorGoogleMaps/js/objectManager.js"></script>
 <script src="_framework/blazor.webassembly.js"></script>
 <script src="_content/MudBlazor/MudBlazor.min.js"></script>

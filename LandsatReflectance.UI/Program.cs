@@ -3,12 +3,21 @@ using System.Text.Json;
 using Blazored.LocalStorage;
 using GoogleMapsComponents;
 using LandsatReflectance.Common.Converters;
+using LandsatReflectance.Models;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using LandsatReflectance.UI;
 using LandsatReflectance.UI.Services;
 using LandsatReflectance.UI.Services.Api;
 using MudBlazor.Services;
+using ProtoBuf.Meta;
+
+
+// Pre-compiling 'Wrs2Area' class for faster de-serialization
+var model = RuntimeTypeModel.Default;
+model.Add(typeof(Wrs2Area), true);
+model.CompileInPlace();
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -41,6 +50,7 @@ builder.Services.AddScoped(sp =>
     return httpClient;
 });
 
+builder.Services.AddScoped<Wrs2AreasService>();
 builder.Services.AddScoped<UserInterfaceService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CurrentUserService>();
