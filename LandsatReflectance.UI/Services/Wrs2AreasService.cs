@@ -36,24 +36,6 @@ public class Wrs2AreasService
         if (m_environment.IsDevelopment())
         {
             Console.WriteLine($"[Wrs2AreasService] Loaded {Wrs2Areas.Length} areas.");
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            foreach (var wrs2Area in Wrs2Areas)
-            {
-                IEnumerable<IEnumerable<LatLngLiteral>> paths = Wrs2Areas
-                    .Select(area => area.LatLongCoordinates.Select(latLong => new LatLngLiteral(latLong.Latitude, latLong.Longitude)));
-                
-                var polygonOptions = new PolygonOptions
-                {
-                    Paths = paths
-                };
-                
-                // do something else
-            }
-            stopwatch.Start();
-            
-            Console.WriteLine($"[Wrs2AreasService] Finished iterating in {stopwatch.Elapsed.TotalSeconds:F}s ({stopwatch.Elapsed.TotalMilliseconds}ms)");
         }
     }
     
@@ -79,7 +61,6 @@ public class Wrs2AreasService
         }
 
         using var decompressedByteMemoryStream = new MemoryStream(decompressedBytes);
-        return ProtoBuf.Serializer.Deserialize<Wrs2Area[]>(decompressedByteMemoryStream)
-            .ToArray();
+        return ProtoBuf.Serializer.Deserialize<Wrs2Area[]>(decompressedByteMemoryStream).ToArray();
     }
 }
